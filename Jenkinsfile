@@ -26,7 +26,7 @@ pipeline {
                     script {
                         bat """
                             echo %PASSWORD% | docker login -u %USERNAME% --password-stdin
-                            docker push %USERNAME%/to-do-list
+                            docker push %USERNAME%/todolist
                         """
                     }
                 }
