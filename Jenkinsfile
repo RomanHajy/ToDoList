@@ -1,27 +1,18 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "romanhajy/to-do-list"
-    }
-
     stages {
-        stage('Manual Git Clone') {
+        stage('Clone Repository') {
             steps {
-                sh '''
-                    rm -rf to-do-list
-                    git clone https://github.com/RomanHajy/ToDoList.git to-do-list
-                    cd to-do-list
-                '''
+                git branch: 'main', url: 'https://github.com/Ramanhajy/ToDoList'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                    cd to-do-list
-                    docker build -t $IMAGE_NAME .
-                '''
+                script {
+                    dockerImage = docker.build('ramanismael/to-do-list')
+                }
             }
         }
 
@@ -32,10 +23,10 @@ pipeline {
                     usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD'
                 )]) {
-                    sh '''
-                        echo $PASSWORD | docker login -u $USERNAME --password-stdin
-                        docker push $IMAGE_NAME
-                    '''
+                    script {
+                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+                        sh 'docker push $USERNAME/to-do-list'
+                    }
                 }
             }
         }
