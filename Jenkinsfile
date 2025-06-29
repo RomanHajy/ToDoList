@@ -24,8 +24,10 @@ pipeline {
                     passwordVariable: 'PASSWORD'
                 )]) {
                     script {
-                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                        sh 'docker push $USERNAME/to-do-list'
+                        bat """
+                            echo %PASSWORD% | docker login -u %USERNAME% --password-stdin
+                            docker push %USERNAME%/to-do-list
+                        """
                     }
                 }
             }
