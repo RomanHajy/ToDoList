@@ -4,14 +4,14 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/Ramanhajy/ToDoList'
+                git 'https://github.com/RomanHajy/to-do-list-ci-cd'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('ramanismael/to-do-list')
+                    dockerImage = docker.build('romanhajy/to-do-list')
                 }
             }
         }
@@ -23,10 +23,10 @@ pipeline {
                     usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD'
                 )]) {
-                    script {
-                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                        sh 'docker push $USERNAME/to-do-list'
-                    }
+                    bat """
+                    echo %PASSWORD% | docker login -u %USERNAME% --password-stdin
+                    docker push %USERNAME%/to-do-list
+                    """
                 }
             }
         }
